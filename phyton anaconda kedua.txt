@@ -1,0 +1,53 @@
+pip install pydotplus
+
+pip install graphviz
+
+d:
+
+d: cd anaconda
+
+import pandas as pd
+import pydotplus
+from IPython.display import Image
+from sklearn import tree
+from sklearn.tree import export_graphviz
+
+data = pd.read_csv('stroke.csv')
+data.head()
+
+from sklearn.preprocessing import LabelEncoder
+enc = LabelEncoder()
+data['gender']=enc.fit_transform(data['gender'].values)
+data['hypertension']=enc.fit_transform(data['hypertension'].values)
+data['heart_disease']=enc.fit_transform(data['heart_disease'].values)
+data['ever_married']=enc.fit_transform(data['ever_married'].values)
+data['work_type']=enc.fit_transform(data['work_type'].values)
+data['Residence_type']=enc.fit_transform(data['Residence_type'].values)
+data['bmi']=enc.fit_transform(data['bmi'].values)
+data['smoking_status']=enc.fit_transform(data['smoking_status'].values)
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.tree import DecisionTreeClassifier
+
+X = data.iloc[:,1:11].values
+Y = data.iloc[:,11].values
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+tree_data = DecisionTreeClassifier(random_state=0)
+tree_data.fit(X_train, Y_train)
+
+import numpy as np
+X_in = np.array([1,67.0,0,1,1,2,1,228.69,239])
+Y_pred = tree_data.predict([X_in])
+Y_pred
+
+print ('Nilai Akurasi:', tree_data.score(X_test, Y_test))
+
+import graphviz
+from sklearn.tree import export_graphviz
+with open('tree_stroke.dot') as fig:
+    dot_graph = fig.read()
+graphviz.Source(dot_graph)
+graph = pydotplus.graph_from_dot_data(dot_graph)
+graph.write_png('treee.png')

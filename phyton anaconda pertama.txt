@@ -1,0 +1,59 @@
+Wine.csv disimpan di folder
+
+d:
+d:\ cd namafolder
+d:\namafolder> jupyter notebook
+
+
+#mengimport library 
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd 
+
+di shift + enter = ganti tab
+
+dataset = pd.read_csv('Wine.csv')
+X = dataset.iloc[:,0:13].values
+Y = dataset.iloc[:,13].values
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state = 0)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+print (X_train)
+
+di ctrl + enter = tidak ganti tab
+
+from sklearn.decomposition import PCA
+pca = PCA(n_components = None)
+X_train = pca.fit_transform(X_train)
+X_test = pca.transform(X_test)
+hasil_variance = pca.explained_variance_ratio_
+print (hasil_variance)
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state = 0)
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+pca = PCA(n_components = 2)
+X_train = pca.fit_transform(X_train)
+X_test = pca.transform(X_test)
+hasil_variance2 = pca.explained_variance_ratio_
+print(hasil_variance2)
+
+from sklearn.linear_model import LogisticRegression
+mesin_klasifikasi = LogisticRegression(random_state = 0)
+mesin_klasifikasi.fit(X_train, Y_train)
+
+#hasil y_test?
+Y_pred = mesin_klasifikasi.predict(X_test)
+print(Y_pred)
+
+#membandingkan =
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(Y_test, Y_pred)
+print (cm)
